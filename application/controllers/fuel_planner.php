@@ -17,7 +17,7 @@ class Fuel_planner extends CI_Controller {
 		$config['upload_path'] = './uploads/';
 		$config['allowed_types'] = 'csv';
 		$config['max_size']	= '1000';
-
+		
 		$this->load->library('upload', $config);
 
 		//IF ERRORS
