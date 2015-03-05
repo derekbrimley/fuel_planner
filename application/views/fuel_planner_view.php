@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-	hello garrett
+	good bye garrett
 	this is the 3rd test change by garrett
 	<head>
 		<title><?=$title?></title>
