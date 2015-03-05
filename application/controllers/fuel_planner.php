@@ -37,8 +37,8 @@ class Fuel_planner extends CI_Controller {
 			//FOREACH ROW
 			while (($row = fgetcsv($csv_doc)) !== false) 
 			{
-				//echo "<br>";
-				//echo $row_number;
+				echo "<br>";
+				echo $row_number;
 				if($row_number > 1)
 				{
 					$column = 1;
@@ -61,11 +61,11 @@ class Fuel_planner extends CI_Controller {
 						{
 							$zip = htmlspecialchars($cell);
 						}
-						elseif($column == 1)
+						elseif($column == 2)
 						{
 							$lat = htmlspecialchars($cell);
 						}
-						elseif($column == 2)
+						elseif($column == 1)
 						{
 							$long = htmlspecialchars($cell);
 						}
@@ -73,11 +73,38 @@ class Fuel_planner extends CI_Controller {
 						$column++;
 					}//END COLUMN
 					echo $name.': '.$city.', '.$state.' '.$zip.': '.$lat.', '.$long.', '."<br/>";
+					$base_api_url = "https://maps.googleapis.com/maps/api/geocode/json?";
+					
+					$params["latlng"] = $lat.','.$long;
+					$params["key"] = 'AIzaSyCDjz2nsurAAjDt7_H40FdD1DFYRtQafeQ';
+					
+					//CREATE PARAM URL
+					$param_url = http_build_query($params);
+					
+					//REQUEST ROUTE AND STORE DATA IN DATA OBJECT
+					$json = file_get_contents($base_api_url.$param_url);
+					$data = json_decode($json);
+					
+					echo $data->address_components;
+					echo "<br/><br/><br/>";
+						
+					//ADD THE WAY POINTS TO THE GOOGLE MAPS HTTP REQUEST 
+					//$route_url = $route_url."+to:".str_replace($url_search,$url_replace,$end_event["address"].", ".$end_event["city"].", ".$end_event["state"]);
+					
+					
+					//echo $base_url.http_build_query($params);
+					//echo urlencode(http_build_query($params));
+					
+					//CREATE PARAM URL
+					$param_url = http_build_query($params);
+
 				}//END ROW
 				$row_number++;
+				
 			}
 			fclose($csv_doc);
 
+			
 		}
 	}
 	
