@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-	hello garrett
-	this is the 4th test change by derek
 	<head>
 		<title><?=$title?></title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -15,7 +13,7 @@
 				<input class="" type="file" name="userfile" />
 			</div>
 			<div style="margin-left:25px;">
-				<button onclick="" style="" class="btn btn-default">Upload</button>
+				<button onclick="" style="">Upload</button>
 			</div>
 		</form>
 	</body>
