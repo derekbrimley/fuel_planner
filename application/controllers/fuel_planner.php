@@ -1,4 +1,4 @@
-<?php		
+	<?php		
 // REVERSE GEOCODING API URL: https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=API_KEY
 // API KEY: AIzaSyCDjz2nsurAAjDt7_H40FdD1DFYRtQafeQ
 class Fuel_planner extends CI_Controller {
@@ -85,7 +85,12 @@ class Fuel_planner extends CI_Controller {
 					$json = file_get_contents($base_api_url.$param_url);
 					$data = json_decode($json);
 					
-					echo $data->address_components;
+					$results = $data->results;
+					
+					$formatted_address = $results[0]->formatted_address;
+					
+					echo $formatted_address;
+					
 					echo "<br/><br/><br/>";
 						
 					//ADD THE WAY POINTS TO THE GOOGLE MAPS HTTP REQUEST 
