@@ -85,8 +85,12 @@ class Fuel_planner extends CI_Controller {
 					$json = file_get_contents($base_api_url.$param_url);
 					$data = json_decode($json);
 					
-					echo $data->address_components;
-					echo "<br/><br/><br/>";
+					//echo print_r($data);
+					echo "<br>";
+					//echo print_r($data->results);
+					echo "<br>";
+					echo $data->results[0]->formatted_address;
+					echo "<br/>************************************************<br/><br/>";
 						
 					//ADD THE WAY POINTS TO THE GOOGLE MAPS HTTP REQUEST 
 					//$route_url = $route_url."+to:".str_replace($url_search,$url_replace,$end_event["address"].", ".$end_event["city"].", ".$end_event["state"]);
