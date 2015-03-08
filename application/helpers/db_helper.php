@@ -180,6 +180,10 @@
 		
 	}//end db_delete_template()	
 	
+	
+	
+	
+	
 //GENERIC FUNCTIONS TO A HANDLE THE VARIOUS DATABASE FUNCTIONS
 
 	//INSERT TABLE
@@ -495,6 +499,10 @@
 		return $categories;
 	}
 	
+	
+	
+	
+	
 //ROUTE_REQUEST: INSERT, SELECT (many), SELECT (one), UPDATE, DELETE
 
 	//INSERT ROUTE_REQUEST
@@ -606,7 +614,251 @@
 	
 	//DELETE ROUTE_REQUEST	
 	function db_delete_route_request($where)
-	{
+	{		
+	
 		db_delete_from_table("route_request",$where);
 		
 	}//end db_delete_route_request()
+	
+
+
+	
+//TRUCK_STOP: INSERT, SELECT (many), SELECT (one), UPDATE, DELETE
+
+	//INSERT TRUCK_STOP
+	function db_insert_truck_stop($truck_stop)
+	{
+		db_insert_table("truck_stop",$truck_stop);
+	
+	}//END db_insert_truck_stop	
+
+	//SELECT TRUCK_STOPS (many)
+	function db_select_truck_stops($where,$order_by = 'id',$limit = 'all')
+	{
+		return db_select_truck_stop($where,$order_by,$limit,"many");
+		
+	}//end db_select_truck_stops() many	
+
+	//SELECT TRUCK_STOP (one)
+	function db_select_truck_stop($where,$order_by = 'id',$limit = 'all',$many = 'one')
+	{
+		$CI =& get_instance();
+		$i = 0;
+		$where_sql = "";
+		if(!empty($where))
+		{
+			$where_sql = " WHERE ";
+		}
+		$values = array();
+		if(is_array($where))
+		{
+			$i = 0;
+			$values = array();
+			foreach($where as $key => $value)
+			{
+				
+				if ($i > 0)
+				{
+					$where_sql = $where_sql." AND";
+				}
+				
+				if ($value == null)
+				{
+					$where_sql = $where_sql." truck_stop.".$key." is ?";
+				}
+				else if (substr($value,0,1) == "%" || substr($value,-1) == "%") //IF VALUE START OR ENDS WITH A %
+				{
+					$where_sql = $where_sql." truck_stop.".$key." LIKE ?";
+				}
+				else
+				{
+					$where_sql = $where_sql." truck_stop.".$key." = ?";
+				}
+				$values[$i] = $value;
+				//echo "value[$i] = $value ";
+				$i++;
+			}
+		}
+		else
+		{
+			$where_sql = $where_sql.$where;
+		}
+		
+		$limit_txt = "";
+		if($limit != "all")
+		{
+			$limit_txt = " LIMIT ".$limit;
+		}
+		
+		$sql = "SELECT *
+				FROM truck_stop 
+				".$where_sql." ORDER BY ".$order_by.$limit_txt;
+		
+		//error_log($sql." | LINE ".__LINE__." ".__FILE__);
+		$query = $CI->db->query($sql,$values);
+		$truck_stops = array();
+		foreach ($query->result() as $row)
+		{
+			$truck_stop['id'] = $row->id;
+			$truck_stop['stop_code'] = $row->stop_code;
+			$truck_stop['name'] = $row->name;
+			$truck_stop['address'] = $row->address;
+			$truck_stop['city'] = $row->city;
+			$truck_stop['state'] = $row->state;
+			$truck_stop['zip'] = $row->zip;
+			$truck_stop['lat'] = $row->lat;
+			$truck_stop['long'] = $row->long;
+			$truck_stop['card'] = $row->card;
+			
+			$truck_stops[] = $truck_stop;
+			
+		}// end foreach
+		
+		if (empty($truck_stop))
+		{
+			return null;
+		}
+		else if($many == 'one')
+		{
+			return $truck_stop;
+		}
+		else if($many == "many")
+		{
+			return $truck_stops;
+		}
+	}//end db_select_truck_stop()
+
+	//UPDATE TRUCK_STOP
+	function db_update_truck_stop($set,$where)
+	{
+		db_update_table("truck_stop",$set,$where);
+		
+	}//end update truck_stop	
+	
+	//DELETE TRUCK_STOP	
+	function db_delete_truck_stop($where)
+	{
+		db_delete_from_table("truck_stop",$where);
+		
+	}//end db_delete_truck_stop()	
+
+	
+	
+	
+//TRUCK_STOP_PRICE: INSERT, SELECT (many), SELECT (one), UPDATE, DELETE
+
+	//INSERT TRUCK_STOP_PRICE
+	function db_insert_truck_stop_price($truck_stop_price)
+	{
+		db_insert_table("truck_stop_price",$truck_stop_price);
+	
+	}//END db_insert_truck_stop_price	
+
+	//SELECT TRUCK_STOP_PRICES (many)
+	function db_select_truck_stop_prices($where,$order_by = 'id',$limit = 'all')
+	{
+		return db_select_truck_stop_price($where,$order_by,$limit,"many");
+		
+	}//end db_select_truck_stop_prices() many	
+
+	//SELECT TRUCK_STOP_PRICE (one)
+	function db_select_truck_stop_price($where,$order_by = 'id',$limit = 'all',$many = 'one')
+	{
+		$CI =& get_instance();
+		$i = 0;
+		$where_sql = "";
+		if(!empty($where))
+		{
+			$where_sql = " WHERE ";
+		}
+		$values = array();
+		if(is_array($where))
+		{
+			$i = 0;
+			$values = array();
+			foreach($where as $key => $value)
+			{
+				
+				if ($i > 0)
+				{
+					$where_sql = $where_sql." AND";
+				}
+				
+				if ($value == null)
+				{
+					$where_sql = $where_sql." truck_stop_price.".$key." is ?";
+				}
+				else if (substr($value,0,1) == "%" || substr($value,-1) == "%") //IF VALUE START OR ENDS WITH A %
+				{
+					$where_sql = $where_sql." truck_stop_price.".$key." LIKE ?";
+				}
+				else
+				{
+					$where_sql = $where_sql." truck_stop_price.".$key." = ?";
+				}
+				$values[$i] = $value;
+				//echo "value[$i] = $value ";
+				$i++;
+			}
+		}
+		else
+		{
+			$where_sql = $where_sql.$where;
+		}
+		
+		$limit_txt = "";
+		if($limit != "all")
+		{
+			$limit_txt = " LIMIT ".$limit;
+		}
+		
+		$sql = "SELECT 
+				FROM `truck_stop_price`
+				".$where_sql." ORDER BY ".$order_by.$limit_txt;
+		
+		//error_log($sql." | LINE ".__LINE__." ".__FILE__);
+		$query = $CI->db->query($sql,$values);
+		$truck_stop_prices = array();
+		foreach ($query->result() as $row)
+		{
+			$truck_stop_price['id'] = $row->id;
+			$truck_stop_price['truck_stop_id'] = $row->truck_stop_id;
+			$truck_stop_price['date'] = $row->date;
+			$truck_stop_price['price'] = $row->price;
+			
+			$truck_stop_prices[] = $truck_stop_price;
+			
+		}// end foreach
+		
+		if (empty($truck_stop_price))
+		{
+			return null;
+		}
+		else if($many == 'one')
+		{
+			return $truck_stop_price;
+		}
+		else if($many == "many")
+		{
+			return $truck_stop_prices;
+		}
+	}//end db_select_truck_stop_price()
+
+	//UPDATE TRUCK_STOP_PRICE
+	function db_update_truck_stop_price($set,$where)
+	{
+		db_update_table("truck_stop_price",$set,$where);
+		
+	}//end update truck_stop_price	
+	
+	//DELETE TRUCK_STOP_PRICE	
+	function db_delete_truck_stop_price($where)
+	{
+		db_delete_from_table("truck_stop_price",$where);
+		
+	}//end db_delete_truck_stop_price()	
+	
+
+
+
+	

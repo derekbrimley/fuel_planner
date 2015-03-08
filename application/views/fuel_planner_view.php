@@ -8,7 +8,7 @@
 	<body>
 		<h1><?=$title?></h1>
 		<?php $attributes = array('name'=>'truck_stop_upload_form','id'=>'truck_stop_upload_form', )?>
-		<?php echo form_open_multipart('fuel_planner/upload_truck_stops/',$attributes);?>
+		<?php echo form_open_multipart('fuel_planner/upload_stop_prices/',$attributes);?>
 			<div style="margin-left:25px; margin-top:25px;">
 				<input class="" type="file" name="userfile" />
 			</div>
