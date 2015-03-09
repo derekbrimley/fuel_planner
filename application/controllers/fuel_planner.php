@@ -166,24 +166,33 @@ class Fuel_planner extends CI_Controller {
 					echo $name.' '.$state.' '.$price;
 					echo "<br/>";
 					$stop_code = $name.' '.$state;
+					echo $stop_code;
 					
 					//GET TRUCK STOP ID
 					$where = null;
-					$where["name"] = $name;
-					$where["state"] = $state;
+					$where["stop_code"] = "$stop_code";
 					$truck_stop = db_select_truck_stop($where);
 					$truck_stop_id = $truck_stop["id"];
 					echo $truck_stop_id;
 					
 					//BUILD TRUCK_STOP_PRICE ARRAY
 					$new_truck_stop_price = null;
-					$new_truck_stop_price["truck_stop_id"] = 
-					$new_truck_stop_price["stop_code"] = $stop_code;
+					$new_truck_stop_price["truck_stop_id"] = $truck_stop_id;
 					$new_truck_stop_price["date"] = $current_datetime;
 					$new_truck_stop_price["price"] = $price;
 					
+					db_insert_truck_stop_price($new_truck_stop_price);
 
+					$where = null;
+					$where["id"] = $truck_stop_id;
+					
+					$update_truck_stop = null;
+					$update_truck_stop["current_price"] = $price;
+					$update_truck_stop["date_updated"] = $current_datetime;
 
+					
+					db_update_truck_stop($update_truck_stop,$where);
+					
 				}//END ROW
 				$row_number++;
 				
@@ -220,5 +229,7 @@ class Fuel_planner extends CI_Controller {
 		//update stop_code
 		
 	}
+
+	
 }
 
