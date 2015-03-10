@@ -163,17 +163,18 @@ class Fuel_planner extends CI_Controller {
 						}
 						$column++;
 					}//END COLUMN
-					echo $name.' '.$state.' '.$price;
+					
+					$stop_code = '\''.$name.' '.$state.'\'';
+					echo "Stop Code: ".$stop_code;
 					echo "<br/>";
-					$stop_code = $name.' '.$state;
-					echo $stop_code;
 					
 					//GET TRUCK STOP ID
 					$where = null;
-					$where["stop_code"] = "$stop_code";
+					$where['stop_code'] = $stop_code;
 					$truck_stop = db_select_truck_stop($where);
+					print_r($truck_stop['name']."<br/>");
 					$truck_stop_id = $truck_stop["id"];
-					echo $truck_stop_id;
+					print_r("Truck Stop ID: ".$truck_stop_id."<br/>");
 					
 					//BUILD TRUCK_STOP_PRICE ARRAY
 					$new_truck_stop_price = null;
@@ -181,24 +182,25 @@ class Fuel_planner extends CI_Controller {
 					$new_truck_stop_price["date"] = $current_datetime;
 					$new_truck_stop_price["price"] = $price;
 					
-					db_insert_truck_stop_price($new_truck_stop_price);
-
+					//db_insert_truck_stop_price($new_truck_stop_price);
+					
 					$where = null;
 					$where["id"] = $truck_stop_id;
 					
 					$update_truck_stop = null;
 					$update_truck_stop["current_price"] = $price;
 					$update_truck_stop["date_updated"] = $current_datetime;
-
 					
-					db_update_truck_stop($update_truck_stop,$where);
+					echo "Price: ".$price."<br/>";
+					echo "date: ".$current_datetime."<br/>";
+					
+					//db_update_truck_stop($update_truck_stop,$where);
 					
 				}//END ROW
 				$row_number++;
 				
 			}
 			fclose($csv_doc);
-
 			
 		}
 	}
@@ -216,7 +218,7 @@ class Fuel_planner extends CI_Controller {
 		//for each truck stops, insert where id = truck_stop_id
 		foreach($truck_stops as $truck_stop)
 		{
-
+			
 			$stop_code = $truck_stop["name"].' '.$truck_stop["state"];
 			
 			$update_truck_stop = null;
@@ -229,7 +231,6 @@ class Fuel_planner extends CI_Controller {
 		//update stop_code
 		
 	}
-
 	
 }
 
