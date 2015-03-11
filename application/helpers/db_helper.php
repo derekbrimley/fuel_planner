@@ -694,7 +694,7 @@
 				FROM truck_stop 
 				".$where_sql." ORDER BY ".$order_by.$limit_txt;
 		
-		//error_log($sql." | LINE ".__LINE__." ".__FILE__);
+		error_log($sql." | LINE ".__LINE__." ".__FILE__);
 		$query = $CI->db->query($sql,$values);
 		$truck_stops = array();
 		foreach ($query->result() as $row)

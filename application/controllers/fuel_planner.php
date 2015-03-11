@@ -149,6 +149,109 @@ class Fuel_planner extends CI_Controller {
 					//FOR EACH CELL
 					foreach ($row as $cell) 
 					{
+						if($column == 2)
+						{
+							$code = htmlspecialchars($cell);
+						}
+						else if($column == 4)
+						{
+							$state = htmlspecialchars($cell);
+						}
+						else if($column == 24)
+						{
+							$price = htmlspecialchars($cell);
+						}
+						$column++;
+					}//END COLUMN
+					
+					echo "<br/>Code: ".$code;
+					
+					//GET TRUCK STOP ID
+					$where = null;
+					$where["stop_code"] = $code;
+					//$where['stop_code'] = "TA TUSCALOOSA AL";
+					$truck_stop = db_select_truck_stop($where);
+					
+					print_r("Truck Stop: ".$truck_stop['name']."<br/>");
+					$truck_stop_id = $truck_stop["id"];
+					print_r("Truck Stop ID: ".$truck_stop_id."<br/>");
+					
+					//BUILD TRUCK_STOP_PRICE ARRAY
+					$new_truck_stop_price = null;
+					$new_truck_stop_price["truck_stop_id"] = $truck_stop_id;
+					$new_truck_stop_price["date"] = $current_datetime;
+					$new_truck_stop_price["price"] = $price;
+					
+					db_insert_truck_stop_price($new_truck_stop_price);
+					
+					$where = null;
+					$where["id"] = $truck_stop_id;
+					
+					$update_truck_stop = null;
+					$update_truck_stop["current_price"] = $price;
+					$update_truck_stop["date_updated"] = $current_datetime;
+					
+					echo "Price: ".$price."<br/>";
+					echo "date: ".$current_datetime."<br/>";
+					
+					db_update_truck_stop($update_truck_stop,$where);
+					
+				}//END ROW
+				$row_number++;
+				
+			}
+			fclose($csv_doc);
+			
+		}
+	}
+	
+	//ONE-TIME SCRIPT TO REPLACE TRUCK STOP NAMES WITH CODE
+	function update_truck_stop_name()
+	{
+		$where = null;
+		$where = "1=1";
+		$truck_stops = db_select_truck_stops($where);
+		
+		//FOR EACH TRUCK STOP, UPDATE 
+		
+		$config = null;
+		$config['upload_path'] = './uploads/';
+		$config['allowed_types'] = 'csv';
+		$config['max_size']	= '1000';
+		
+		$this->load->library('upload', $config);
+		
+		//IF ERRORS
+		if ( ! $this->upload->do_upload())
+		{
+			echo $this->upload->display_errors();
+		}
+		
+		//SUCCESS
+		else 
+		{
+			$file = $this->upload->data();
+			$file_name = $file["file_name"];
+			
+			//PARSE THROUGH CSV FILE
+			
+			$csv_doc = fopen("./uploads/$file_name", "r");
+			$row_number = 1;
+			//FOREACH ROW
+			while (($row = fgetcsv($csv_doc)) !== false) 
+			{
+				echo "<br>";
+				// echo $row_number;
+				if($row_number > 7)
+				{
+					$column = 1;
+					//FOR EACH CELL
+					foreach ($row as $cell) 
+					{
+						if($column == 2)
+						{
+							$code = htmlspecialchars($cell);
+						}
 						if($column == 3)
 						{
 							$name = htmlspecialchars($cell);
@@ -164,44 +267,24 @@ class Fuel_planner extends CI_Controller {
 						$column++;
 					}//END COLUMN
 					
-					$stop_code = '\''.$name.' '.$state.'\'';
-					echo "Stop Code: ".$stop_code;
-					echo "<br/>";
-					
-					//GET TRUCK STOP ID
-					$where = null;
-					$where['stop_code'] = $stop_code;
-					$truck_stop = db_select_truck_stop($where);
-					print_r($truck_stop['name']."<br/>");
-					$truck_stop_id = $truck_stop["id"];
-					print_r("Truck Stop ID: ".$truck_stop_id."<br/>");
-					
-					//BUILD TRUCK_STOP_PRICE ARRAY
-					$new_truck_stop_price = null;
-					$new_truck_stop_price["truck_stop_id"] = $truck_stop_id;
-					$new_truck_stop_price["date"] = $current_datetime;
-					$new_truck_stop_price["price"] = $price;
-					
-					//db_insert_truck_stop_price($new_truck_stop_price);
-					
-					$where = null;
-					$where["id"] = $truck_stop_id;
+					$name = trim($name);
+					$state = trim($state);
+					$stop_code = trim($name.' '.$state);
 					
 					$update_truck_stop = null;
-					$update_truck_stop["current_price"] = $price;
-					$update_truck_stop["date_updated"] = $current_datetime;
+					$update_truck_stop["stop_code"] = $code;
 					
-					echo "Price: ".$price."<br/>";
-					echo "date: ".$current_datetime."<br/>";
+					$where = null;
+					$where["stop_code"] = $stop_code;
 					
-					//db_update_truck_stop($update_truck_stop,$where);
+					db_update_truck_stop($update_truck_stop,$where);
+					
 					
 				}//END ROW
 				$row_number++;
 				
 			}
 			fclose($csv_doc);
-			
 		}
 	}
 	
