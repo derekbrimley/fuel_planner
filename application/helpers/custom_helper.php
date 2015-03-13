@@ -129,7 +129,7 @@
 				//$route_url = $route_url."+to:".str_replace($url_search,$url_replace,$end_event["address"].", ".$end_event["city"].", ".$end_event["state"]);
 				
 				
-				//echo $base_url.http_build_query($params);
+				//echo $base_url.http_build_query($params)."<br/>";
 				//echo urlencode(http_build_query($params));
 				
 				//CREATE PARAM URL
@@ -244,10 +244,9 @@
 		$where = "1 =1";
 		$truck_stops = db_select_truck_stops($where);
 		
-		$closest_truck_stop_current = null;
-		$closest_truck_stop_final = null;
-		$least_distance_current = null;
-		$least_distance_final = null;
+		$closest_truck_stop = null;
+		$least_distance = null;
+		$truck_stops_w_distance = array();
 		
 		foreach( $truck_stops as $truck_stop )
 		{
@@ -255,60 +254,99 @@
 			$lat = $truck_stop["lat"];
 			$long = $truck_stop["long"];
 			
-			$curr_a = $current_lat - $lat;
-			$curr_b = $current_long - $long;
-			$distance_from_current = sqrt(($curr_a*$curr_a)+($curr_b*$curr_b));
+			//CALCULATE DISTANCE BETWEEN CURRENT LOCATION AND FUEL STOPS
+			$a = $current_lat - $lat;
+			$b = $current_long - $long;
+			$distance_from_current = sqrt(($a*$a)+($b*$b));
+						
+			$truck_stop_w_distance["truck_stop"] = $truck_stop;
+			$truck_stop_w_distance["distance_from_current"] = $distance_from_current;
+			$truck_stops_w_distance[] = $truck_stop_w_distance;
 			
-			// $final_a = $final_lat - $lat;
-			// $final_b = $final_long - $long;
-			$distance_from_final = sqrt(($final_a*$final_a)+($final_b*$final_b));
-			
-			if(isset($least_distance_current))
-			{
-				
-				if($distance_from_current < $least_distance_current)
-				{
-					
-					$closest_truck_stop_current = $truck_stop;
-					$least_distance_current = $distance_from_current;
-					
-				}
-				
-			}
-			else
-			{
-				
-				$closest_truck_stop_current = $truck_stop;
-				$least_distance_current = $distance_from_current;
-			}
-			
-			if(isset($least_distance_final))
-			{
-				
-				if($distance_from_final < $least_distance_final)
-				{
-					
-					$closest_truck_stop_final = $truck_stop;
-					$least_distance_final = $distance_from_final;
-					
-				}
-				
-			}
-			else
-			{
-				
-				$closest_truck_stop_final = $truck_stop;
-				$least_distance_final = $distance_from_final;
-			}
 		}
 		
-		return $closest_truck_stop_final;
-		
-		//CALCULATE DISTANCE BETWEEN CURRENT LOCATION AND FUEL STOPS
-		
+		$sorted = array_orderby($truck_stops_w_distance,"distance_from_current",SORT_ASC);
+	
+		$i = 0;
+		foreach($sorted as $stop)
+		{
+			// $i++;
+			
+			
+			//FIX: NEEDS TO BE CURRENT TO WP1 (NOT CURRENT TO TRUCKSTOP)
+			$truck_stop_waypoint = null;
+			$truck_stop_waypoint["address"] = $stop["truck_stop"]["address"];
+			$truck_stop_waypoint["city"] = $stop["truck_stop"]["city"];
+			$truck_stop_waypoint["state"] = $stop["truck_stop"]["state"];
+			
+			$current_to_truckstop_waypoints = null;
+			$current_to_truckstop_waypoints[] = $waypoints[0];
+			$current_to_truckstop_waypoints[] = $truck_stop_waypoint;
+			
+			$current_to_truckstop_map_info = get_map_info($current_to_truckstop_waypoints);
+			
+			echo "current_to_truckstop_map_miles: ".$current_to_truckstop_map_info["map_miles"];
+			
+			
+			//CREATE NEW WAYPOINTS ARRAY WITH TRUCKSTOP WAYPOINT INSERTED BETWEEN CURRENT AND WP1
+			
+			
+			
+			
+			
+			//COMPARE MAP MILES FROM BOTH RESULTS
+				//IF NOT OOR
+					//STORE TRUCK STOP OUTSIDE OF LOOP
+					//BREAK
+			
+			
+			
+			break;
+			// $fuel_stop_address = $stop["truck_stop"]["address"];
+			// $events[] = array();
+			// $current_waypoint = $waypoints[$i+1];
+			// $events[] = $waypoints[$i];
+			// $events[] = $current_waypoint;
+			// $distance_without_fuel = get_map_info($events);
+			
+			// $events[] = array();
+			// $events[] = $waypoints[$i];
+			// $events[] = $fuel_stop_address;
+			// $events[] = $current_waypoint;
+			// $distance_with_fuel = get_map_info($events);
+			
+			// if(($distance_with_fuel-10) <= $distance_without_fuel)
+			// {
+				
+				// return $stop;
+				// break;
+				
+			// }
+		}
+	
+		//return $sorted;
 		
 		
 	}
+	
+	
+	function array_orderby()
+	{
+		$args = func_get_args();
+		$data = array_shift($args);
+		foreach ($args as $n => $field) {
+			if (is_string($field)) {
+				$tmp = array();
+				foreach ($data as $key => $row)
+					$tmp[$key] = $row[$field];
+				$args[$n] = $tmp;
+				}
+		}
+		$args[] = &$data;
+		call_user_func_array('array_multisort', $args);
+		return array_pop($args);
+	}
+	
 	
 	function get_address_from_gps($lat, $long)
 	{

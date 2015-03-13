@@ -394,22 +394,26 @@ class Fuel_planner extends CI_Controller {
 			
 		}
 		
-		print_r($map_events);
+		$original_map_info = get_map_info($map_events);
+		$map_miles_original = $original_map_info["map_miles"];
+		echo "Original Map Miles: ".$map_miles_original."<br/>";
+		echo "Original Route: ".$original_map_info["route_url"]."<br/>";
 		
-		$map_info = get_map_info($map_events);
+		closest_in_route_fuel_stop($current_latitude,$current_longitude,$waypoints);
+		
+		// foreach($closest_fuel_stop as $stop)
+		// {
+		
+		// echo $stop["truck_stop"]["address"].' '.$stop["truck_stop"]["city"].' '.$stop["truck_stop"]["state"];
+		// echo $stop["distance_from_current"]."<br/>";
+			
+		// }
 		
 		
-		echo $map_info["route_url"];
-		echo "<br>";
-		echo $map_info["map_miles"];
-		echo "<br>";
-		
-		// echo closest_in_route_fuel_stop($current_latitude,$current_longitude,$waypoints)["name"];
 		//LOGIC
 		
+		
 	}
-	
-
-	
+		
 }
 
