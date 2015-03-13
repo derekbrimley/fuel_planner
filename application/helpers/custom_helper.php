@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-	//GET MAP MILES AND ROUTE FOR GIVEN EVENT ARRAY
+//GET MAP MILES AND ROUTE FOR GIVEN EVENT ARRAY
 	function get_map_info($map_events) //RETURNS AN ARRAY WITH MAP MILES AND ROUTE
 	{
 		//echo "<br>--- new function --<br>";
@@ -229,8 +229,107 @@
 		
 		return $map_info;
 		
+	}	
+	
+	function closest_in_route_fuel_stop($current_lat,$current_long,$waypoints)
+	{
+		
+		//CONVERT LAT AND LONG TO ADDRESS
+		$current_address = $waypoints[0]["address"];
+		// $final_destination = $waypoints[10]["address"];
+		// $final_lat = $waypoints[10]["lat"];
+		// $final_long = $waypoints[10]["long"];
+		
+		$where = null;
+		$where = "1 =1";
+		$truck_stops = db_select_truck_stops($where);
+		
+		$closest_truck_stop_current = null;
+		$closest_truck_stop_final = null;
+		$least_distance_current = null;
+		$least_distance_final = null;
+		
+		foreach( $truck_stops as $truck_stop )
+		{
+			
+			$lat = $truck_stop["lat"];
+			$long = $truck_stop["long"];
+			
+			$curr_a = $current_lat - $lat;
+			$curr_b = $current_long - $long;
+			$distance_from_current = sqrt(($curr_a*$curr_a)+($curr_b*$curr_b));
+			
+			// $final_a = $final_lat - $lat;
+			// $final_b = $final_long - $long;
+			$distance_from_final = sqrt(($final_a*$final_a)+($final_b*$final_b));
+			
+			if(isset($least_distance_current))
+			{
+				
+				if($distance_from_current < $least_distance_current)
+				{
+					
+					$closest_truck_stop_current = $truck_stop;
+					$least_distance_current = $distance_from_current;
+					
+				}
+				
+			}
+			else
+			{
+				
+				$closest_truck_stop_current = $truck_stop;
+				$least_distance_current = $distance_from_current;
+			}
+			
+			if(isset($least_distance_final))
+			{
+				
+				if($distance_from_final < $least_distance_final)
+				{
+					
+					$closest_truck_stop_final = $truck_stop;
+					$least_distance_final = $distance_from_final;
+					
+				}
+				
+			}
+			else
+			{
+				
+				$closest_truck_stop_final = $truck_stop;
+				$least_distance_final = $distance_from_final;
+			}
+		}
+		
+		return $closest_truck_stop_final;
+		
+		//CALCULATE DISTANCE BETWEEN CURRENT LOCATION AND FUEL STOPS
+		
+		
+		
 	}
-
+	
+	function get_address_from_gps($lat, $long)
+	{
+		$base_api_url = "https://maps.googleapis.com/maps/api/geocode/json?";
+		$params["latlng"] = $lat.','.$long;
+		$params["key"] = 'AIzaSyCDjz2nsurAAjDt7_H40FdD1DFYRtQafeQ';
+		//CREATE PARAM URL
+		$param_url = http_build_query($params);
+		//REQUEST ROUTE AND STORE DATA IN DATA OBJECT
+		$json = file_get_contents($base_api_url.$param_url);
+		$data = json_decode($json);
+		$street_number = $data->results[0]->address_components[0]->long_name;
+		$street = $data->results[0]->address_components[1]->long_name;
+		$city = $data->results[0]->address_components[3]->long_name;
+		$state = $data->results[0]->address_components[5]->long_name;
+		$zip = $data->results[0]->address_components[7]->long_name;
+		
+		return $street_number.' '.$street.' '.$city.' '.$state.' '.$zip;
+		
+	}
+	
 	function test($param)
 	{
 		return $param * 2;

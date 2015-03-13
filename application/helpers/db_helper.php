@@ -574,7 +574,7 @@
 				FROM `route_request`
 				".$where_sql." ORDER BY ".$order_by.$limit_txt;
 		
-		echo $sql;
+		//echo $sql;
 		$query = $CI->db->query($sql,$values);
 		$route_requests = array();
 		foreach ($query->result() as $row)

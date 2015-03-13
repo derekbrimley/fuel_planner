@@ -315,5 +315,101 @@ class Fuel_planner extends CI_Controller {
 		
 	}
 	
+	//
+	function generate_fuel_plan()
+	{
+		
+		$current_latitude = $_POST["current_latitude"];
+		$current_longitude = $_POST["current_longitude"];		
+		$fuel_tank_capacity = $_POST["fuel_tank_capacity"];
+		$current_fuel_level = $_POST["current_fuel_level"];
+		$destination_1 = $_POST["destination_1"];
+		$destination_2 = $_POST["destination_2"];
+		$destination_3 = $_POST["destination_3"];
+		$destination_4 = $_POST["destination_4"];
+		$destination_5 = $_POST["destination_5"];
+		$destination_6 = $_POST["destination_6"];
+		$destination_7 = $_POST["destination_7"];
+		$destination_8 = $_POST["destination_8"];
+		$destination_9 = $_POST["destination_9"];
+		$final_destination = $_POST["final_destination"];
+		
+		$waypoint0["address"] = get_address_from_gps($current_latitude,$current_longitude);
+		$waypoint0["city"] = '';
+		$waypoint0["state"] = '';
+		$waypoint1["address"] = $destination_1;
+		$waypoint1["city"] = '';
+		$waypoint1["state"] = '';
+		$waypoint2["address"] = $destination_2;
+		$waypoint2["city"] = '';
+		$waypoint2["state"] = '';
+		$waypoint3["address"] = $destination_3;
+		$waypoint3["city"] = '';
+		$waypoint3["state"] = '';
+		$waypoint4["address"] = $destination_4;
+		$waypoint4["city"] = '';
+		$waypoint4["state"] = '';
+		$waypoint5["address"] = $destination_5;
+		$waypoint5["city"] = '';
+		$waypoint5["state"] = '';
+		$waypoint6["address"] = $destination_6;
+		$waypoint6["city"] = '';
+		$waypoint6["state"] = '';
+		$waypoint7["address"] = $destination_7;
+		$waypoint7["city"] = '';
+		$waypoint7["state"] = '';
+		$waypoint8["address"] = $destination_8;
+		$waypoint8["city"] = '';
+		$waypoint8["state"] = '';
+		$waypoint9["address"] = $destination_9;
+		$waypoint9["city"] = '';
+		$waypoint9["state"] = '';
+		$waypoint10["address"] = $final_destination;
+		$waypoint10["city"] = '';
+		$waypoint10["state"] = '';
+		
+		$waypoints = array();
+		$waypoints[] = $waypoint0;
+		$waypoints[] = $waypoint1;
+		$waypoints[] = $waypoint2;
+		$waypoints[] = $waypoint3;
+		$waypoints[] = $waypoint4;
+		$waypoints[] = $waypoint5;
+		$waypoints[] = $waypoint6;
+		$waypoints[] = $waypoint7;
+		$waypoints[] = $waypoint8;
+		$waypoints[] = $waypoint9;
+		$waypoints[] = $waypoint10;
+		
+		$map_events = array();
+		foreach($waypoints as $waypoint)
+		{
+			
+			if(!empty($waypoint["address"]))
+			{
+				
+				$map_events[] = $waypoint;
+				
+			}
+			
+		}
+		
+		print_r($map_events);
+		
+		$map_info = get_map_info($map_events);
+		
+		
+		echo $map_info["route_url"];
+		echo "<br>";
+		echo $map_info["map_miles"];
+		echo "<br>";
+		
+		// echo closest_in_route_fuel_stop($current_latitude,$current_longitude,$waypoints)["name"];
+		//LOGIC
+		
+	}
+	
+
+	
 }
 
