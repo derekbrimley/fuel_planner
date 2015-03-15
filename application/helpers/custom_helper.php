@@ -233,6 +233,7 @@
 	
 	function closest_in_route_fuel_stop($current_lat,$current_long,$waypoints)
 	{
+		$closet_in_route_fuel_stop = null;
 		
 		//CONVERT LAT AND LONG TO ADDRESS
 		$current_address = $waypoints[0]["address"];
@@ -271,61 +272,64 @@
 		foreach($sorted as $stop)
 		{
 			// $i++;
-			
-			
+
 			//FIX: NEEDS TO BE CURRENT TO WP1 (NOT CURRENT TO TRUCKSTOP)
 			$truck_stop_waypoint = null;
 			$truck_stop_waypoint["address"] = $stop["truck_stop"]["address"];
 			$truck_stop_waypoint["city"] = $stop["truck_stop"]["city"];
 			$truck_stop_waypoint["state"] = $stop["truck_stop"]["state"];
 			
-			$current_to_truckstop_waypoints = null;
-			$current_to_truckstop_waypoints[] = $waypoints[0];
-			$current_to_truckstop_waypoints[] = $truck_stop_waypoint;
+			echo "Truck Stop: ".$stop["truck_stop"]["name"]." ".$truck_stop_waypoint["city"]." ".$truck_stop_waypoint["state"];
+			echo "<br><br>";
 			
-			$current_to_truckstop_map_info = get_map_info($current_to_truckstop_waypoints);
+			$current_to_wp_waypoints = null;
+			$current_to_wp_waypoints[] = $waypoints[0];
+			$current_to_wp_waypoints[] = $waypoints[1];
 			
-			echo "current_to_truckstop_map_miles: ".$current_to_truckstop_map_info["map_miles"];
+			//print_r($waypoints[0]);
+			//echo "<br><br>";
+			//print_r($waypoints[1]);
+			
+			$current_to_wp_map_info = get_map_info($current_to_wp_waypoints);
+			
+			echo "Current to WP 1: ".$current_to_wp_map_info["map_miles"];
+			echo "<br><br>";
 			
 			
 			//CREATE NEW WAYPOINTS ARRAY WITH TRUCKSTOP WAYPOINT INSERTED BETWEEN CURRENT AND WP1
+			$current_to_wp_w_truckstop_waypoints = null;
+			$current_to_wp_w_truckstop_waypoints[] = $waypoints[0];
+			$current_to_wp_w_truckstop_waypoints[] = $truck_stop_waypoint;
+			$current_to_wp_w_truckstop_waypoints[] = $waypoints[1];
 			
+			$current_to_wp_w_truckstop_map_info = get_map_info($current_to_wp_w_truckstop_waypoints);
 			
+			echo "Current to WP 1 w/ truckstop: ".$current_to_wp_w_truckstop_map_info["map_miles"];
+			echo "<br><br>";
 			
+			$oor_distance = $current_to_wp_w_truckstop_map_info["map_miles"] - $current_to_wp_map_info["map_miles"];
 			
-			
+			$oor_tolerance = 10;
 			//COMPARE MAP MILES FROM BOTH RESULTS
-				//IF NOT OOR
-					//STORE TRUCK STOP OUTSIDE OF LOOP
-					//BREAK
-			
-			
-			
-			break;
-			// $fuel_stop_address = $stop["truck_stop"]["address"];
-			// $events[] = array();
-			// $current_waypoint = $waypoints[$i+1];
-			// $events[] = $waypoints[$i];
-			// $events[] = $current_waypoint;
-			// $distance_without_fuel = get_map_info($events);
-			
-			// $events[] = array();
-			// $events[] = $waypoints[$i];
-			// $events[] = $fuel_stop_address;
-			// $events[] = $current_waypoint;
-			// $distance_with_fuel = get_map_info($events);
-			
-			// if(($distance_with_fuel-10) <= $distance_without_fuel)
-			// {
+			if($oor_distance < $oor_tolerance)
+			{
+				//STORE TRUCK STOP OUTSIDE OF LOOP
+				$closet_in_route_fuel_stop = $stop["truck_stop"];
 				
-				// return $stop;
-				// break;
+				echo "In route!";
+				echo "<br><br>";
 				
-			// }
-		}
-	
-		//return $sorted;
-		
+				//BREAK
+				break;
+			}
+			else
+			{
+				echo "Truck stop is OOR: ".$oor_distance;
+				echo "<br>__________________________________________";
+				echo "<br><br>";
+				
+			}
+		}//end foreach sorted stops
 		
 	}
 	
