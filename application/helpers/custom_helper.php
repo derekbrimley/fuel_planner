@@ -269,6 +269,20 @@
 		$sorted = array_orderby($truck_stops_w_distance,"distance_from_current",SORT_ASC);
 	
 		$i = 0;
+		
+		$current_to_wp_waypoints = null;
+		$current_to_wp_waypoints[] = $waypoints[0];
+		$current_to_wp_waypoints[] = $waypoints[1];
+		
+		//print_r($waypoints[0]);
+		//echo "<br><br>";
+		//print_r($waypoints[1]);
+		
+		$current_to_wp_map_info = get_map_info($current_to_wp_waypoints);
+		
+		echo "Current to WP 1: ".$current_to_wp_map_info["map_miles"];
+		echo "<br><br>";
+		
 		foreach($sorted as $stop)
 		{
 			// $i++;
@@ -279,21 +293,7 @@
 			$truck_stop_waypoint["city"] = $stop["truck_stop"]["city"];
 			$truck_stop_waypoint["state"] = $stop["truck_stop"]["state"];
 			
-			echo "Truck Stop: ".$stop["truck_stop"]["name"]." ".$truck_stop_waypoint["city"]." ".$truck_stop_waypoint["state"];
-			echo "<br><br>";
 			
-			$current_to_wp_waypoints = null;
-			$current_to_wp_waypoints[] = $waypoints[0];
-			$current_to_wp_waypoints[] = $waypoints[1];
-			
-			//print_r($waypoints[0]);
-			//echo "<br><br>";
-			//print_r($waypoints[1]);
-			
-			$current_to_wp_map_info = get_map_info($current_to_wp_waypoints);
-			
-			echo "Current to WP 1: ".$current_to_wp_map_info["map_miles"];
-			echo "<br><br>";
 			
 			
 			//CREATE NEW WAYPOINTS ARRAY WITH TRUCKSTOP WAYPOINT INSERTED BETWEEN CURRENT AND WP1
@@ -304,8 +304,6 @@
 			
 			$current_to_wp_w_truckstop_map_info = get_map_info($current_to_wp_w_truckstop_waypoints);
 			
-			echo "Current to WP 1 w/ truckstop: ".$current_to_wp_w_truckstop_map_info["map_miles"];
-			echo "<br><br>";
 			
 			$oor_distance = $current_to_wp_w_truckstop_map_info["map_miles"] - $current_to_wp_map_info["map_miles"];
 			
@@ -316,21 +314,26 @@
 				//STORE TRUCK STOP OUTSIDE OF LOOP
 				$closet_in_route_fuel_stop = $stop["truck_stop"];
 				
-				echo "In route!";
+				echo "Truck Stop: ".$stop["truck_stop"]["name"]." ".$truck_stop_waypoint["city"]." ".$truck_stop_waypoint["state"];
 				echo "<br><br>";
-				
-				//BREAK
-				break;
-			}
-			else
-			{
-				echo "Truck stop is OOR: ".$oor_distance;
+				echo "Current to WP 1 w/ truckstop: ".$current_to_wp_w_truckstop_map_info["map_miles"];
+				echo "<br><br>";
+				echo "In route!"."<br>";
+				echo $current_to_wp_w_truckstop_map_info["route_url"];
 				echo "<br>__________________________________________";
 				echo "<br><br>";
 				
+				//BREAK
+				//break;
+			}
+			else
+			{
+				// echo "Truck stop is OOR: ".$oor_distance;
+				// echo "<br>__________________________________________";
+				// echo "<br><br>";
+				
 			}
 		}//end foreach sorted stops
-		
 	}
 	
 	
