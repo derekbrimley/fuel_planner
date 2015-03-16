@@ -324,7 +324,7 @@
 				echo "<br><br>";
 				
 				//BREAK
-				//break;
+				break;
 			}
 			else
 			{
