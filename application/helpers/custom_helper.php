@@ -319,7 +319,7 @@
 				echo "Current to WP 1 w/ truckstop: ".$current_to_wp_w_truckstop_map_info["map_miles"];
 				echo "<br><br>";
 				echo "In route!"."<br>";
-				echo $current_to_wp_w_truckstop_map_info["route_url"];
+				echo "<a href=".$current_to_wp_w_truckstop_map_info['route_url'].">Route Link</a>";
 				echo "<br>__________________________________________";
 				echo "<br><br>";
 				
