@@ -100,7 +100,7 @@
 								Current Latitude:
 							</td>
 							<td>
-								<input value="40.720206" id="current_latitude" name="current_latitude" class="text_box" type="text"/>
+								<input value="40.648494" id="current_latitude" name="current_latitude" class="text_box" type="text"/>
 							</td>
 						</tr>
 						<tr>
@@ -108,7 +108,7 @@
 								Current Longitude:
 							</td>
 							<td>
-								<input value="-112.018735" id="current_longitude" name="current_longitude" class="text_box" type="text"/>
+								<input value="-111.808910" id="current_longitude" name="current_longitude" class="text_box" type="text"/>
 							</td>
 						</tr>
 						<tr>
