@@ -182,6 +182,14 @@
 								<input id="destination_9" name="destination_9" class="text_box" type="text"/>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								Destination 10:
+							</td>
+							<td>
+								<input id="destination_10" name="destination_10" class="text_box" type="text"/>
+							</td>
+						</tr>
 					</table>
 				</form>
 				<button onclick="generate_fuel_plan()">Generate Fuel Plan</button>

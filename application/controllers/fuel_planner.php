@@ -222,10 +222,13 @@ class Fuel_planner extends CI_Controller {
 		$destination_7 = $_POST["destination_7"];
 		$destination_8 = $_POST["destination_8"];
 		$destination_9 = $_POST["destination_9"];
+		$destination_10 = $_POST["destination_10"];
 		
 		$waypoint0["address"] = get_address_from_gps($current_latitude,$current_longitude);
 		$waypoint0["city"] = '';
 		$waypoint0["state"] = '';
+		$waypoint0["lat"] = $current_latitude;
+		$waypoint0["long"] =$current_longitude;
 		$waypoint1["address"] = $destination_1;
 		$waypoint1["city"] = '';
 		$waypoint1["state"] = '';
@@ -253,6 +256,9 @@ class Fuel_planner extends CI_Controller {
 		$waypoint9["address"] = $destination_9;
 		$waypoint9["city"] = '';
 		$waypoint9["state"] = '';
+		$waypoint10["address"] = $destination_10;
+		$waypoint10["city"] = '';
+		$waypoint10["state"] = '';
 		
 		$waypoints = array();
 		$waypoints[] = $waypoint0;
@@ -265,8 +271,8 @@ class Fuel_planner extends CI_Controller {
 		$waypoints[] = $waypoint7;
 		$waypoints[] = $waypoint8;
 		$waypoints[] = $waypoint9;
+		$waypoints[] = $waypoint10;
 		
-		//print_r($waypoints);
 		
 		$map_events = array();
 		foreach($waypoints as $waypoint)
@@ -277,9 +283,54 @@ class Fuel_planner extends CI_Controller {
 			}
 		}
 		
-		$closest_in_route_fuel_stop = closest_in_route_fuel_stop($current_latitude,$current_longitude,$map_events);
 		
-		echo $closest_in_route_fuel_stop["name"];
+		
+		$in_route_truck_stops = array();
+		$location = $waypoints[0];
+		$unset_index = 0;
+		$i = 0;
+		while(!empty($location))
+		{
+			echo "Top of while loop: ".$location["address"]."<br>";
+			$result_stop = closest_in_route_fuel_stop($location["lat"],$location["long"],array_values($map_events));
+			$not_in_list = true;
+			if(!empty($in_route_truck_stops))
+			{
+				foreach($in_route_truck_stops as $in_route_truck_stop)
+				{
+					echo "Result Stop ID: ".$result_stop["id"]." VS ";
+					echo "In Route Truck Stop ID: ".$in_route_truck_stop["id"]."<br>";
+					
+					if($result_stop["id"] == $in_route_truck_stop["id"])
+					{
+						echo "This stop is already in list"."<br>";
+						unset($map_events[$unset_index]);
+						$unset_index++;
+						$not_in_list = false;
+						//echo $not_in_list."<br>";
+					}
+					
+				}
+				
+			}
+			echo "not_in_list = ".$not_in_list."<br>";
+			if($not_in_list == true)
+			{
+				$location = $result_stop;
+				$in_route_truck_stops[] = $location;
+				
+				echo "LOCATION ADDED: ".$location["id"].' '.$location["name"]."<br>";
+				echo "<br>___________________________<br><br>";
+			}
+			$i++;
+			if($i == 10)
+			{
+				break;
+				
+			}
+			
+			echo "****************** NEW WHILE LOOP ************************<br>";
+		}
 		
 		//LOGIC
 		
