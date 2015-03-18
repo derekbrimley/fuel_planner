@@ -291,36 +291,39 @@ class Fuel_planner extends CI_Controller {
 		$i = 0;
 		while(!empty($location))
 		{
-			echo "Top of while loop: ".$location["address"]."<br>";
-			$result_stop = closest_in_route_fuel_stop($location["lat"],$location["long"],array_values($map_events));
+			echo "TOP OF WHILE LOOP: ".$location["address"]." ".$location["city"]."<br>";
+			// echo "map events: ";
+			// print_r($map_events)."<br>";
+			$result_stop = closest_in_route_fuel_stop($location["lat"],$location["long"],$map_events);
 			$not_in_list = true;
 			if(!empty($in_route_truck_stops))
 			{
 				foreach($in_route_truck_stops as $in_route_truck_stop)
 				{
-					echo "Result Stop ID: ".$result_stop["id"]." VS ";
-					echo "In Route Truck Stop ID: ".$in_route_truck_stop["id"]."<br>";
+					// echo "Result Stop ID: ".$result_stop["id"]." VS ";
+					// echo "In Route Truck Stop ID: ".$in_route_truck_stop["id"]."<br>";
 					
 					if($result_stop["id"] == $in_route_truck_stop["id"])
 					{
-						echo "This stop is already in list"."<br>";
-						unset($map_events[$unset_index]);
-						$unset_index++;
+						// echo "This stop is already in list"."<br>";
+						$map_events[0] = $location;
+						// unset($map_events[$unset_index]);
+						// $map_events = array_values($map_events);
+						// $unset_index++;
 						$not_in_list = false;
-						//echo $not_in_list."<br>";
 					}
 					
 				}
 				
 			}
-			echo "not_in_list = ".$not_in_list."<br>";
+			// echo "not_in_list = ".$not_in_list."<br>";
 			if($not_in_list == true)
 			{
 				$location = $result_stop;
 				$in_route_truck_stops[] = $location;
 				
-				echo "LOCATION ADDED: ".$location["id"].' '.$location["name"]."<br>";
-				echo "<br>___________________________<br><br>";
+				echo "<br>LOCATION ADDED: ".$location["id"].' '.$location["name"]."<br>";
+				// echo "___________________________<br>";
 			}
 			$i++;
 			if($i == 10)
@@ -329,10 +332,10 @@ class Fuel_planner extends CI_Controller {
 				
 			}
 			
-			echo "****************** NEW WHILE LOOP ************************<br>";
+			// echo "****************** BOTTOM OF WHILE LOOP *******************<br><br>";
 		}
 		
-		//LOGIC
+		//print_r($in_route_truck_stops);
 		
 		
 	}

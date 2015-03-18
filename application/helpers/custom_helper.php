@@ -279,7 +279,7 @@
 			if($i > 0)
 			{
 				
-				echo "Current waypoint: $i"."<br>";
+				// echo "Current waypoint: $i"."<br>";
 				//ADD THISWAYPOINT
 				$current_to_this_waypoint = null;
 				$current_to_this_waypoint[] = $waypoints[0];
@@ -287,13 +287,13 @@
 				
 				$current_to_this_wp_map_info = get_map_info($current_to_this_waypoint);
 				
-				echo "Current to WP $i: ".$current_to_this_wp_map_info["map_miles"];
-				echo "<br><br>";
+				// echo "Current to WP $i: ".$current_to_this_wp_map_info["map_miles"];
+				// echo "<br><br>";
 				
 				foreach($sorted as $stop)
 				{
 					
-					echo "Current Truck Stop: ".$stop["truck_stop"]["name"]."<br>";
+					// echo "Current Truck Stop: ".$stop["truck_stop"]["name"]."<br>";
 					
 					//CREATE CURRENT TRUCK STOP
 					$truck_stop_waypoint = null;
@@ -310,10 +310,10 @@
 					//IF THISWAYPOINT IS CLOSER THAN STOP
 					if($current_to_truckstop_map_info["map_miles"] > $current_to_this_wp_map_info["map_miles"])
 					{
-						echo "Farther than current waypoint!"."<br>";
-						echo "<br>__________________________________________<br>";
-						//BREAK
-						break;
+						// echo "Farther than current waypoint!"."<br>";
+						// echo "<br>__________________________________________<br>";
+						// //BREAK
+						// break;
 					}
 					
 					//CREATE NEW WAYPOINTS ARRAY WITH TRUCKSTOP WAYPOINT INSERTED BETWEEN CURRENT AND WP1
@@ -334,13 +334,13 @@
 						//STORE TRUCK STOP OUTSIDE OF LOOP
 						$closet_in_route_fuel_stop = $stop["truck_stop"];
 						
-						echo "Closest In-Route Truck Stop: ".$stop["truck_stop"]["name"]." ".$truck_stop_waypoint["city"]." ".$truck_stop_waypoint["state"];
-						echo "<br><br>";
+						// echo "Closest In-Route Truck Stop: ".$stop["truck_stop"]["name"]." ".$truck_stop_waypoint["city"]." ".$truck_stop_waypoint["state"];
+						// echo "<br><br>";
 						// echo "Current to WP $i w/ truckstop: ".$current_to_wp_w_truckstop_map_info["map_miles"];
 						// echo "<br><br>";
-						echo "In route!"."<br>";
+						// echo "In route!"."<br>";
 						// echo "<a href=".$current_to_wp_w_truckstop_map_info['route_url'].">Route Link</a>";
-						echo "<br>__________________________________________<br>";
+						// echo "<br>__________________________________________<br>";
 						
 						//RETURN TRUCKSTOP
 						return $closet_in_route_fuel_stop;
@@ -349,9 +349,9 @@
 					}
 					else
 					{
-						echo "Truck stop is OOR: ".$oor_distance;
-						echo "<br>__________________________________________";
-						echo "<br><br>";
+						// echo "Truck stop is OOR: ".$oor_distance;
+						// echo "<br>__________________________________________";
+						// echo "<br><br>";
 						
 					}
 				}//end foreach sorted stops
