@@ -291,7 +291,7 @@ class Fuel_planner extends CI_Controller {
 		$i = 0;
 		while(!empty($location))
 		{
-			echo "TOP OF WHILE LOOP: ".$location["address"]." ".$location["city"]."<br>";
+			//echo "TOP OF WHILE LOOP: ".$location["address"]." ".$location["city"]."<br>";
 			// echo "map events: ";
 			// print_r($map_events)."<br>";
 			$result_stop = closest_in_route_fuel_stop($location["lat"],$location["long"],$map_events);
@@ -307,14 +307,12 @@ class Fuel_planner extends CI_Controller {
 					{
 						// echo "This stop is already in list"."<br>";
 						$map_events[0] = $location;
-						// unset($map_events[$unset_index]);
-						// $map_events = array_values($map_events);
-						// $unset_index++;
+						//unset($map_events[$unset_index]);
+						//$map_events = array_values($map_events);
+						//$unset_index++;
 						$not_in_list = false;
 					}
-					
 				}
-				
 			}
 			// echo "not_in_list = ".$not_in_list."<br>";
 			if($not_in_list == true)
@@ -326,7 +324,7 @@ class Fuel_planner extends CI_Controller {
 				// echo "___________________________<br>";
 			}
 			$i++;
-			if($i == 10)
+			if($i == 50)
 			{
 				break;
 				
@@ -336,8 +334,7 @@ class Fuel_planner extends CI_Controller {
 		}
 		
 		//print_r($in_route_truck_stops);
-		
-		
+			
 	}
 	
 
@@ -462,4 +459,3 @@ class Fuel_planner extends CI_Controller {
 	}
 	
 }
-

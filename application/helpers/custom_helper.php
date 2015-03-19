@@ -290,9 +290,14 @@
 				// echo "Current to WP $i: ".$current_to_this_wp_map_info["map_miles"];
 				// echo "<br><br>";
 				
+				$sorted_counter = 0;
 				foreach($sorted as $stop)
 				{
-					
+					$sorted_counter++;
+					// if($sorted_counter >= 5)
+					// {
+						// break;
+					// }
 					// echo "Current Truck Stop: ".$stop["truck_stop"]["name"]."<br>";
 					
 					//CREATE CURRENT TRUCK STOP
@@ -313,7 +318,7 @@
 						// echo "Farther than current waypoint!"."<br>";
 						// echo "<br>__________________________________________<br>";
 						// //BREAK
-						// break;
+						break;
 					}
 					
 					//CREATE NEW WAYPOINTS ARRAY WITH TRUCKSTOP WAYPOINT INSERTED BETWEEN CURRENT AND WP1
@@ -354,7 +359,9 @@
 						// echo "<br><br>";
 						
 					}
+					
 				}//end foreach sorted stops
+				
 			}
 			$i++;
 		}//END FOREACH WAYPOINTS
