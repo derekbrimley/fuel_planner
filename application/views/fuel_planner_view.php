@@ -16,43 +16,43 @@
 		</style>
 		<script>
 		
-		function generate_fuel_plan()
-		{
-			
-			//-------------- AJAX -------------------
-			// GET THE DIV IN DIALOG BOX
-			
-			var ajax_div = $('#ajax_plan');
-			
-			ajax_div.html("Generating Fuel Plan... ");
-			//POST DATA TO PASS BACK TO CONTROLLER
-						var dataString = $("#fuel_plan_form").serialize();
-			// var dataString = "&id="+row;
-			// AJAX!
-			$.ajax({
-				url: "<?= base_url("index.php/fuel_planner/generate_fuel_plan")?>", // in the quotation marks
-				type: "POST",
-				data: dataString,
-				cache: false,
-				context: ajax_div, // use a jquery object to select the result div in the view
-				statusCode: {
-					200: function(response){
-						// Success!
-						//alert(response);
-						ajax_div.html(response);
-					},
-					404: function(){
-						// Page not found
-						alert('page not found');
-					},
-					500: function(response){
-						// Internal server error
-						alert("500 error!")
+			function generate_fuel_plan()
+			{
+				
+				//-------------- AJAX -------------------
+				// GET THE DIV IN DIALOG BOX
+				
+				var ajax_div = $('#ajax_plan');
+				
+				ajax_div.html("Generating Fuel Plan... ");
+				//POST DATA TO PASS BACK TO CONTROLLER
+							var dataString = $("#fuel_plan_form").serialize();
+				// var dataString = "&id="+row;
+				// AJAX!
+				$.ajax({
+					url: "<?= base_url("index.php/fuel_planner/generate_fuel_plan")?>", // in the quotation marks
+					type: "POST",
+					data: dataString,
+					cache: false,
+					context: ajax_div, // use a jquery object to select the result div in the view
+					statusCode: {
+						200: function(response){
+							// Success!
+							//alert(response);
+							ajax_div.html(response);
+						},
+						404: function(){
+							// Page not found
+							alert('page not found');
+						},
+						500: function(response){
+							// Internal server error
+							alert("500 error!")
+						}
 					}
-				}
-			});//END AJAX
-		
-		}
+				});//END AJAX
+			
+			}
 		
 		</script>
 	</head>
